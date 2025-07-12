@@ -1,7 +1,11 @@
-from chatbot import run_chatbot
+
 import streamlit as st
+st.write("App booted successfully ✅")
+from chatbot import run_chatbot
 from PIL import Image
 import pathlib
+import re
+import time
 
 def load_css(file_path):
    with open(file_path) as f:
@@ -75,7 +79,14 @@ def loadAnswer(prompt):
     message_placeholder = st.empty()
     message_placeholder.markdown("Loading...")
     answer = run_chatbot(prompt)
-    message_placeholder.markdown(answer)
+
+    split = re.findall(r'\S+|\s+', answer)
+    typing = ""
+
+    for word in split:
+      typing += word
+      message_placeholder.markdown(typing)
+      time.sleep(0.002)
 
     st.session_state.conversation.append({"role": "assistant", "content": answer})
 
